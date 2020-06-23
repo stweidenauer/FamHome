@@ -1,8 +1,8 @@
 from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
 from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, IntegerField
+from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -12,6 +12,12 @@ app.config['SECRET_KEY'] = "hard to guess string"
 class NameForm(FlaskForm):
     name = StringField("Bitte Namen eingeben:", validators=[DataRequired()])
     submit = SubmitField('Bestätigen')
+
+
+class CalcForm(FlaskForm):
+    add1 = IntegerField("Erster Summand:", validators=[DataRequired()])
+    add2 = IntegerField("Zweiter Summand:", validators=[DataRequired()])
+    submit = SubmitField('+')
 
 
 @app.route('/')
@@ -27,6 +33,20 @@ def user():
         name = form.name.data
         form.name.data = ''
     return render_template('user.html', form=form, name=name)
+
+
+@app.route('/calc', methods=['GET', 'POST'])
+def calc():
+    add1 = None
+    add2 = None
+    result = 0
+    form = CalcForm()
+    if form.validate_on_submit():
+        add1 = form.add1.data
+        form.add1.data = ''
+        add2 = form.add2.data
+        result = add1 + add2
+    return render_template('calc.html', form=form, result=result)
 
 
 if __name__ == '__main__':
