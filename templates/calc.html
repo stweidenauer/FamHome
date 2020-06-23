@@ -8,5 +8,15 @@ Mein Rechner
 {% block page_content %}
 <h1>Meine kleiner Plusrechner</h1>
 {{ wtf.quick_form(form) }}
-<h1>Das Ergebnis ist {% if  result%}{{ result }}{% else %}0{% endif %}!</h1>
+<h1>Das Ergebnis ist {% if result%}{{ result }}{% else %}0{% endif %}!</h1>
+
+<!--
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.add1.label }}{{ form.add1() }}
+    {{ form.add2.label }}{{ form.add2() }}
+    {{ form.submit() }}
+</form>
+-->
+
 {% endblock %}
