@@ -9,4 +9,9 @@ Meine User Startseite
 <h1>Meine User Startseitencontent</h1>
 {{ wtf.quick_form(form) }}
 <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+{{ wtf.quick_form(form2) }}
+<h1>{% if text %}{{ text }}{% else %}kein wichtiger Text{% endif %}!</h1>
+
+
+
 {% endblock %}

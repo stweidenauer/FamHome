@@ -20,6 +20,10 @@ class CalcForm(FlaskForm):
     submit = SubmitField('+')
 
 
+class SubBtn(FlaskForm):
+    submit = SubmitField('Passiert was')
+
+
 @app.route('/')
 def index():
     return render_template('Index.html')
@@ -28,11 +32,15 @@ def index():
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     name = None
+    text = ''
     form = NameForm()
+    form2 = SubBtn()
     if form.validate_on_submit():
         name = form.name.data
         form.name.data = ''
-    return render_template('user.html', form=form, name=name)
+    if form2.validate_on_submit():
+        text = "Ein wichtiger Text"
+    return render_template('user.html', form=form, form2=form2, name=name, text=text)
 
 
 @app.route('/calc', methods=['GET', 'POST'])
