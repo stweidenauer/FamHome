@@ -2,11 +2,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Meine User Startseite
+Register
 {% endblock %}
 
 {% block page_content %}
-<h1>Meine User Startseitencontent</h1>
 {{ wtf.quick_form(form) }}
-<h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
 {% endblock %}
