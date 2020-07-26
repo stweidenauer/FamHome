@@ -19,7 +19,7 @@ def user():
     if form.validate_on_submit():
         session['name'] = form.name.data
         return redirect(url_for("user"))
-    return render_template('user.html', form=form, name=session.get('name'))
+    return render_template('User.html', form=form, name=session.get('name'))
 
 
 @app.route('/calc', methods=['GET', 'POST'])
