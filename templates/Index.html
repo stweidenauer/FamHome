@@ -6,4 +6,9 @@ Meine Homepage Startseite
 
 {% block page_content %}
 <h1>Meine Homepage Startseitencontent</h1>
-{% endblock %}
+<h2>Thumbnail</h2>
+<p>Thumbnail Test</p>
+{% for picture in pictures %}
+<img src={{picture}} class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
+{% endfor %}
+</div>{% endblock %}

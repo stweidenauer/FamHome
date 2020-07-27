@@ -22,7 +22,6 @@ class LogInForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField("Username: ", validators=[DataRequired()])
     email = StringField("Email Adress: ", validators=[DataRequired(), Email()])
-    # , Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
