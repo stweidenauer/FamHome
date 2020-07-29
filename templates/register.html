@@ -6,5 +6,18 @@ Register
 {% endblock %}
 
 {% block page_content %}
-{{ wtf.quick_form(form) }}
+<div class="content-section">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Join Today</legend>
+        <div class="form-group">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </fieldset>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Already Have An Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+        </small>
+    </div>
+</div>
 {% endblock %}

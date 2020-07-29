@@ -17,6 +17,7 @@ class CalcForm(FlaskForm):
 class LogInForm(FlaskForm):
     email = StringField("Email Adress: ", validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Bestätigen')
 
 
 class RegisterForm(FlaskForm):
