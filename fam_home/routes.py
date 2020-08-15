@@ -1,26 +1,20 @@
 import os
-from flask import Flask, render_template, session, redirect, url_for
-from flask_bootstrap import Bootstrap
-from forms import CalcForm, NameForm, LogInForm, RegisterForm
-from flask_sqlalchemy import SQLAlchemy
-from models import User, Post
-
-app = Flask(__name__)
-bootstrap = Bootstrap(app)
-db = SQLAlchemy(app)
-app.config['SECRET_KEY'] = "hard to guess string"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+from flask import render_template, session, redirect, url_for
+from fam_home import app
+from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm
+from fam_home.models import User, Post
 
 
 @app.route('/')
 def index():
-    path_to_pictures = os.path.join('static')
+    path_to_pictures = os.path.join('fam_home', 'static', 'pictures')
     pictures = []
     # path ist cwd
     # erstellt eine Liste aller Pfadangaben,
     # aller Bilder im Verzeichnis /static/pictures
     for picture in os.listdir(path_to_pictures):
         pictures.append(os.path.join(path_to_pictures, picture))
+    print(pictures)
     return render_template('Index.html', pictures=pictures)
 
 
@@ -41,7 +35,7 @@ def calc():
     form = CalcForm()
     if form.validate_on_submit():
         add1 = form.add1.data
-        form.add1.data = ''
+        # form.add1.data = ''
         add2 = form.add2.data
         result = add1 + add2
     return render_template('calc.html', form=form, result=result)
@@ -60,9 +54,4 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         print("whatever")
-
     return render_template('register.html', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=8400)
