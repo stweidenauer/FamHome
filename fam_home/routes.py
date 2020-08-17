@@ -1,6 +1,6 @@
 import os
-from flask import render_template, session, redirect, url_for
-from fam_home import app
+from flask import render_template, session, redirect, url_for, flash
+from fam_home import app, db, bcrypt
 from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm
 from fam_home.models import User, Post
 
@@ -18,13 +18,13 @@ def index():
     return render_template('Index.html', pictures=pictures)
 
 
-@app.route('/user', methods=['GET', 'POST'])
-def user():
+@app.route('/benutzer', methods=['GET', 'POST'])
+def benutzer():
     form = NameForm()
     if form.validate_on_submit():
         session['name'] = form.name.data
-        return redirect(url_for("user"))
-    return render_template('User.html', form=form, name=session.get('name'))
+        return redirect(url_for("benutzer"))
+    return render_template('benutzer.html', form=form, name=session.get('name'))
 
 
 @app.route('/calc', methods=['GET', 'POST'])
@@ -45,6 +45,7 @@ def calc():
 def login():
     form = LogInForm()
     if form.validate_on_submit():
+        flash('Your account has been created! You are now able to log in', 'success')
         print("whatever")
     return render_template('login.html', form=form)
 
@@ -53,5 +54,10 @@ def login():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        print("whatever")
+        hash_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hash_pw)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html', form=form)
