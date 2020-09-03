@@ -1,7 +1,7 @@
 import os
 from flask import render_template, session, redirect, url_for, flash
 from fam_home import app, db, bcrypt
-from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm
+from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm, UpdateAccountForm
 from fam_home.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -10,11 +10,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 def index():
     path_to_pictures = os.path.join('fam_home', 'static', 'pictures')
     pictures = []
-    # path ist cwd
-    # erstellt eine Liste aller Pfadangaben,
-    # aller Bilder im Verzeichnis /static/pictures
     for picture in os.listdir(path_to_pictures):
-        pictures.append(os.path.join(path_to_pictures, picture))
+        pictures.append(url_for('static', filename='pictures/' + picture))
     print(pictures)
     return render_template('Index.html', pictures=pictures)
 
@@ -78,7 +75,15 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'] )
 @login_required
 def account():
-    return render_template('account.html')
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your Account Has Been Updated', 'success')
+        return redirect(url_for('account'))
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('account.html', title='Account', image_file=image_file, form=form)
