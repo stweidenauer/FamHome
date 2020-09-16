@@ -1,14 +1,27 @@
 import os
 import secrets
-
 from PIL import Image
 from flask import render_template, session, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
-
 from fam_home import app, db, bcrypt
-from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm, UpdateAccountForm
+from fam_home.forms import CalcForm, NameForm, LogInForm, RegisterForm, UpdateAccountForm, PostForm
 from fam_home.models import User
 
+
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
 
 @app.route('/')
 def index():
@@ -17,7 +30,7 @@ def index():
     for picture in os.listdir(path_to_pictures):
         pictures.append(url_for('static', filename='pictures/' + picture))
     print(pictures)
-    return render_template('Index.html', pictures=pictures)
+    return render_template('Index.html', pictures=pictures, posts=posts)
 
 
 @app.route('/benutzer', methods=['GET', 'POST'])
@@ -111,3 +124,13 @@ def account():
 
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file=image_file, form=form)
+
+
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        flash('Your Post has been created', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_post.html', title='New Post', form=form)
