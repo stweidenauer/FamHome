@@ -14,9 +14,10 @@ Meine Homepage Startseite
 <img src="{{picture}}" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
 {% endfor %}
 
-{% for post in posts %}
+{% for post in posts.items %}
 <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}">
+    <img class="rounded-circle article-img"
+         src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}">
     <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="#">{{ post.author.username }}</a>
@@ -27,6 +28,19 @@ Meine Homepage Startseite
     </div>
 </article>
 {% endfor %}
+
+{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+        {% if posts.page == page_num %}
+            <a class="btn btn-info mb-4" href="{{ url_for('index', page=page_num) }}"> {{ page_num }}</a>
+        {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('index', page=page_num) }}"> {{ page_num }}</a>
+        {% endif %}
+    {% else %}
+        ...
+    {% endif%}
+{% endfor %}
+
 
 {% endif %}
 
