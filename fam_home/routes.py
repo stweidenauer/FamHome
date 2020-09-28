@@ -5,10 +5,11 @@ from PIL import Image
 from flask import render_template, session, redirect, url_for, flash, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 
-from fam_home import app, db, bcrypt
+from fam_home import app, db, bcrypt, mail
 from fam_home.forms import (CalcForm, NameForm, LogInForm, RegisterForm,
                             UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm)
 from fam_home.models import User, Post
+from flask_mail import Message
 
 
 @app.route('/')
@@ -178,7 +179,14 @@ def user_posts(username):
 
 
 def send_reset_email(user):
-    pass
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='codessteffen@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''to reset your Password visit the following 
+link {url_for('reset_token', token=token, _external=True)} 
+If you didi not make request, ignore all above Good Morning'''
+    mail.send(msg)
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
@@ -203,12 +211,12 @@ def reset_token(token):
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
     form = ResetPasswordForm()
-    # if form.validate_on_submit():
-    #     hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-    #     user.password = hashed_password
-    #     db.session.commit()
-    #     flash('Your password has been updated! You are now able to log in', 'success')
-    #     return redirect(url_for('login'))
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'success')
+        return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
 # @app.route("/reset_password/2", methods=['GET', 'POST'])
