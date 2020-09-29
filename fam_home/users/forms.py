@@ -1,21 +1,9 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, SubmitField, IntegerField, PasswordField, TextAreaField
+from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
-
 from fam_home.models import User
-
-
-class NameForm(FlaskForm):
-    name = StringField("Bitte Namen eingeben:", validators=[DataRequired()])
-    submit = SubmitField('Bestätigen')
-
-
-class CalcForm(FlaskForm):
-    add1 = IntegerField("Erster Summand:", validators=[DataRequired()])
-    add2 = IntegerField("Zweiter Summand:", validators=[DataRequired()])
-    submit = SubmitField('+')
 
 
 class LogInForm(FlaskForm):
@@ -62,12 +50,6 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('That email is taken...')
 
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post this')
-
-
 class RequestResetForm(FlaskForm):
     email = StringField("Email Adress: ", validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
@@ -82,4 +64,3 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
-
